@@ -2,64 +2,52 @@
 
 import { Then } from "cypress-cucumber-preprocessor/steps";
 
-Then('user is clicking on a button', () => {
-
-    cy.document().then(($document) => {
-        $document.addEventListener('click', () => {
-            window.setTimeout(()=>{
-
-            
-            let urlList = new Array();
-            const entries = window.performance.getEntries().map(r => r.name);;
-
-            for (let i = 0; i < entries.length; i++) {
-                let temp = entries[i].toString();
-                console.log(temp)
-                if (temp.includes("nci.122.2o7.net")) {
-
-                    urlList.push(entries[i]);
-                }
-            }
-            if (urlList.length > 0) {
-                console.log(urlList);
-            }
-            // const url = new URL(urlList[urlList.length - 1]);
-            // const urlParams = new URLSearchParams(url.search);
-            // console.log(urlParams)
 
 
-        },1000);
-            return false;
+Then('user is clicking on a button', () => {    
+    // cy.server({
+    //     onRequest: (xhr) => {
+    //         console.log(xhr);
+    //     }
+    // });
+    // cy.route({
+    //     method: 'GET',
+    //     url: 'https://nci.122.2o7.net/**',
+    //     status: 200,
+    //     onRequest: (xhr) => {
+    //         console.log(xhr);
+    //     }
+    // }).as('analyticsClick');
+
+    //cy.fixture('https://nci.122.2o7.net/**', 'binary').then((dunno) => {
+    //    console.log(dunno);
+    //})
+
+    // Make the browser desktop viewport so left nav shows.
+    // Do this BEFORE tracking analytics call since it also
+    // makes a call.
+    cy.viewport(1025, 600);
+
+    // Now wait for the resize to finish and the analytics call to
+    // be made. This is really because I am lazy...
+    cy.wait(500);
+
+    cy.document().then($document => {
+
+        // Prevent default browser behavior.
+        $document.addEventListener('click', (e) => { e.preventDefault(); return false; })
+
+        // Listen for a dom insertion
+        $document.addEventListener('analyticsCall', (e) => {
+            // Do the assertion here!!!
+            const url = e.detail;
         });
     })
-    cy.get('.on-this-page > ul > :nth-child(1) > a').click();
 
+    // Click the left nav to trigger the event, which the above eventListener
+    // will listen for.
+    cy.get('#nvcgSlSectionNav a[href="/about-cancer/coping/feelings/relaxation"]').click();
 
-    // cy.get('.on-this-page > ul > :nth-child(1) > a').should(($link) => {
-    //     $link.on('click', () => {
-    //         let urlList = new Array();
-    //         const entries = window.performance.getEntries().map(r => r.name);;
-
-    //         for (let i = 0; i < entries.length; i++) {
-    //             let temp = entries[i].toString();
-    //             console.log(temp)
-    //             if (temp.includes("nci.122.2o7.net")) {
-
-    //                 urlList.push(entries[i]);
-    //             }
-    //         }
-    //         if(urlList.length>0){
-    //             console.log(urlList);
-    //         }
-    //        // const url = new URL(urlList[urlList.length - 1]);
-    //         // const urlParams = new URLSearchParams(url.search);
-    //         // console.log(urlParams)
-
-
-    //         return false;
-    //     });
-    // })
-    // cy.get('.on-this-page > ul > :nth-child(1) > a').click();
 });
 
 Then('the common click event properties are captured', () => {
