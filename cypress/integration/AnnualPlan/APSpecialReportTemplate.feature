@@ -52,3 +52,36 @@ Feature: function test for special report template for Annual Plan
         And the hero image title text is "Spanish: NCI Annual Plan & Budget Proposal For Fiscal Year 2022"
         And the main content area should appear
         And left navigation menu is not displayed
+
+
+    Scenario Outline: Web site visitor views an Annual Plan page  and PDF link appears only on desktop and table
+        Given user is navigating to "<url>"
+        And screen breakpoint is set to "<screenBreakpoint>"
+        Then the PDF download link should appear
+        And a PDF icon located at "profiles/custom/cgov_site/themes/custom/cgov/cgov_common/dist/images/sprites/svg-sprite.svg" should be displayed with a text "Annual Plan & Budget Proposal At A Glance"
+        And clicking on the link will open a new window
+
+        Examples:
+            | screenBreakpoint | url                     |
+            | desktop          | /special-report         |
+            | tablet           | /espanol/special-report |
+    Scenario: Web site visitor views an Annual Plan page  and PDF link is not shown on mobile
+        Given user is navigating to "/special-report"
+        And screen breakpoint is set to "mobile"
+        Then the PDF download link is not displayed
+
+    Scenario: Click events for “Annual Plan & Budget Proposal At-A-Glance” file download button from the page (top link)
+        Given user is navigating to "/special-report"
+        When user clicks on PDF download button
+        Then page click request is sent
+        And the following parameters should be captured
+            | parameter | value                                   |
+            | event52   |                                         |
+            | prop4     | D=pev1                                  |
+            | prop8     | english                                 |
+            | prop66    | filedownload_icon                       |
+            | prop67    | D=pagename                              |
+            | eVar2     | english                                 |
+            | channel   | NCI Homepage                            |
+            | pageName  | {CANONICAL_HOST}/special-report         |
+            | pageURL   | https://{CANONICAL_HOST}/special-report |
