@@ -80,8 +80,8 @@ Feature: function test for special report template for Annual Plan
             | prop4     | D=pev1                                  |
             | prop8     | english                                 |
             | prop66    | filedownload_icon                       |
-            | prop67    | D=pagename                              |
-            | eVar2     | english                                 |
+            | prop67    | D=pageName                              |
+            | evar2     | english                                 |
             | channel   | NCI Homepage                            |
             | pageName  | {CANONICAL_HOST}/special-report         |
             | pageURL   | https://{CANONICAL_HOST}/special-report |
