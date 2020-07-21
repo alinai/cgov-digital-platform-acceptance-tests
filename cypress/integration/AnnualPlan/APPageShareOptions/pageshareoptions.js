@@ -1,36 +1,38 @@
 /// <reference types="Cypress" />
 
-import { Given, And, Then } from "cypress-cucumber-preprocessor/steps";
-
+import { And, Then } from "cypress-cucumber-preprocessor/steps";
 
 Then('the page options should appear in a fixed position to the right of the main content area', () => {
-    cy.get("#PageOptionsControl1").should("have.attr", "class", "page-options no-resize large-5 columns");
-
+    cy.get(` #PageOptionsControl1`).should('have.attr', 'class').and('not.include', 'bottom-options');
 });
 
+
 And('the following page options are displayed', dataTable => {
-    cy.document().then((doc) => {
-        const pageOption = doc.querySelectorAll('#PageOptionsControl1');
-        for (const { pageOption } of dataTable.hashes()) {
-            cy.get(`#PageOptionsControl1 a[title='${pageOption}']`).should('be.visible');
-        }
-
-    });
-
+    for (const { pageOption } of dataTable.hashes()) {
+        cy.document().then(doc => {
+            if (doc.documentElement.clientWidth < 768) {
+                cy.get(`.mobile-page-options #PageOptionsControl1 a[title='${pageOption}']`).should('be.visible');
+            } else {
+                cy.get(`#PageOptionsControl1 a[title='${pageOption}']`).should('be.visible');
+            }
+        })
+    }
 });
 
 Then('the page options should appear under the bottom of the content area', () => {
-    cy.get(".mobile-page-options #PageOptionsControl1").should("have.attr", "class", "page-options no-resize bottom-options large-5 columns");
+    cy.get(".mobile-page-options #PageOptionsControl1").should("have.attr", "class").and('include','bottom');
 
 });
 
+
+
 And('{string} option is not displayed', (printOption) => {
-cy.get('.mobile-page-options li.page-options--print').find('a[title="Print"]').should('not.be.visible');
+    cy.get('.mobile-page-options li.page-options--print').find('a[title="Print"]').should('not.be.visible');
 
 });
 
 And('the page options will have a header {string}', (shareText) => {
-cy.get('.mobile-page-options').find('p').should('have.text', shareText);
+    cy.get('.mobile-page-options').find('p').should('have.text', shareText);
 
 });
 
