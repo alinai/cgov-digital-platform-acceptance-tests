@@ -3,7 +3,7 @@
 import { And, Then } from "cypress-cucumber-preprocessor/steps";
 
 Then('the page options should appear in a fixed position to the right of the main content area', () => {
-    cy.get(` #PageOptionsControl1`).should('have.attr', 'class').and('not.include', 'bottom-options');
+    cy.get('#PageOptionsControl1').should('have.attr', 'class').and('not.include', 'bottom-options');
 });
 
 
@@ -20,14 +20,14 @@ And('the following page options are displayed', dataTable => {
 });
 
 Then('the page options should appear under the bottom of the content area', () => {
-    cy.get(".mobile-page-options #PageOptionsControl1").should("have.attr", "class").and('include','bottom');
+    cy.get('.mobile-page-options #PageOptionsControl1').should("have.attr", "class").and('include','bottom');
 
 });
 
 
 
 And('{string} option is not displayed', (printOption) => {
-    cy.get('.mobile-page-options li.page-options--print').find('a[title="Print"]').should('not.be.visible');
+    cy.get('.mobile-page-options li.page-options--print').find(`a[title='${printOption}']`).should('not.be.visible');
 
 });
 
