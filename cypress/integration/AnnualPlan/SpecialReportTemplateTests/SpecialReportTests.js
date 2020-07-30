@@ -3,30 +3,30 @@
 import { Then, And } from "cypress-cucumber-preprocessor/steps";
 
 Then('the hero image should be displayed full width with the following', dataTable => {
+    cy.get('#nvcgSlHeroHeader > div > .rawHtml').find('img').as('image');
     for (const { attribute, value } of dataTable.hashes()) {
         if (attribute === 'alt') {
             if (value === 'empty') {
-                expect(cy.get('#nvcgSlHeroHeader > div > .rawHtml img').should('have.attr', 'alt').and('eq', ''));
+                cy.get('#nvcgSlHeroHeader > div > .rawHtml img').should('have.attr', 'alt').and('eq', '');
             }
 
             else {
-                expect(cy.get('#nvcgSlHeroHeader > div > .rawHtml img').should('have.attr', 'alt').and('eq', value));
+                cy.get('#nvcgSlHeroHeader > div > .rawHtml img').should('have.attr', 'alt').and('eq', value);
             }
 
         }
 
-
         if (attribute === 'image') {
             const regex = new RegExp(value);
-            cy.get('#nvcgSlHeroHeader > div > .rawHtml').find('img').should('have.attr', 'src').and('match', regex);
+            cy.get('@image').should('have.attr', 'src').and('match', regex);
         }
 
         if (attribute === 'width') {
-            cy.get('#nvcgSlHeroHeader > div > .rawHtml').find('img').should('have.attr', 'width').and('eq', value);
+            cy.get('@image').should('have.attr', 'width').and('eq', value);
         }
 
         if (attribute === 'height') {
-            cy.get('#nvcgSlHeroHeader > div > .rawHtml').find('img').should('have.attr', 'height').and('eq', value);
+            cy.get('@image').should('have.attr', 'height').and('eq', value);
         }
     }
 });
